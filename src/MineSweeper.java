@@ -7,27 +7,23 @@ import java.awt.*;
 public class MineSweeper extends JFrame {
 
     final String TITLE_OF_PROGRAM = "MineSweeper";
-    final int FIELD_WIDTH = 10;
-    final int FIELD_HEIGHT = 10;
-    final int FIELD_DX = 6;
-    final int FIELD_DY = 28;
-    final int CELL_SIZE = 25;
+    final int FIELD_DX = 16;
+    final int FIELD_DY = 38;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         new MineSweeper().run();
     }
 
-    private void run() {
-       // new Field().show();
-        Field field = new Field(FIELD_WIDTH, FIELD_HEIGHT);
-        Canvas canvas = new Canvas();
-        //canvas.setBackground(Color.BLACK);
+    private void run() throws InterruptedException {
+        Field field = new Field();
+        JPanel fl = new JPanel();
+        fl.setBackground(Color.black);
         JFrame frame = new JFrame(TITLE_OF_PROGRAM);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        frame.setBounds(500, 200, FIELD_WIDTH*CELL_SIZE+FIELD_DX, FIELD_HEIGHT*CELL_SIZE+FIELD_DY);
-        frame.setResizable(false);
-        frame.add(canvas);
+        frame.setBounds(500, 200, field.getFieldWidth() * field.getCellSize()+FIELD_DX, field.getFieldHeight() * field.getCellSize()+FIELD_DY);
+        field.setBackground(Color.white);
+        field.showFieldInConsole();
+        frame.add(field);
         frame.setVisible(true);
-        field.show();
     }
 }

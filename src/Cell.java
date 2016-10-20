@@ -1,3 +1,4 @@
+
 /**
  * Created by evgeny on 14.10.2016.
  */
@@ -39,4 +40,5 @@ public class Cell {
     public void setFlag(boolean flag) {
         this.flag = flag;
     }
+
 }

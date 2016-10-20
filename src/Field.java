@@ -1,16 +1,19 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 /**
  * Created by evgeny on 14.10.2016.
  */
-public class Field {
-
-
+public class Field extends JPanel {
+    final int CELL_SIZE = 25;
+    final int FIELD_WIDTH = 8;
+    final int FIELD_HEIGHT = 8;
     final int BOMB_COUNT = 10;
-    final Cell[][] array;
+    Cell[][] array;
     Random rnd = new Random();
 
-    Field(int FIELD_WIDTH, int FIELD_HEIGHT) {
+    Field() {
         array = new Cell[FIELD_WIDTH][FIELD_HEIGHT];
         fillArray();
         setBombs();
@@ -55,7 +58,7 @@ public class Field {
         }
     }
 
-    public void show() {
+    public void showFieldInConsole() {
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < array[i].length; j++) {
                 if (array[i][j].isBomb()) {
@@ -65,6 +68,38 @@ public class Field {
                 }
             }
             System.out.println();
+        }
+    }
+
+    public int getFieldWidth() {
+        return FIELD_WIDTH;
+    }
+
+    public int getFieldHeight() {
+        return FIELD_HEIGHT;
+    }
+
+    public int getCellSize() {
+        return CELL_SIZE;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+       super.paintComponent(g);
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_WIDTH; j++) {
+                if (!array[i][j].isVisible()) {
+                    g.setColor(Color.GRAY);
+                    g.fill3DRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, true);
+                } else if (!array[i][j].isBomb()) {
+                    g.setColor(Color.BLUE);
+                    g.setFont(new Font("",Font.BOLD,CELL_SIZE));
+                    g.drawString(Integer.toString(array[i][j].getBombsAround()), i * CELL_SIZE + 6, j * CELL_SIZE + 22);
+                } else {
+                    g.setColor(Color.BLACK);
+                    g.fillRoundRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                }
+            }
         }
     }
 }
