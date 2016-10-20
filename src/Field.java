@@ -83,6 +83,10 @@ public class Field extends JPanel {
         return CELL_SIZE;
     }
 
+    public Cell getCell(int x, int y) {
+        return array[x][y];
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
        super.paintComponent(g);
@@ -91,11 +95,11 @@ public class Field extends JPanel {
                 if (!array[i][j].isVisible()) {
                     g.setColor(Color.GRAY);
                     g.fill3DRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, true);
-                } else if (!array[i][j].isBomb()) {
+                } else if (!array[i][j].isBomb() && array[i][j].getBombsAround() != 0) {
                     g.setColor(Color.BLUE);
                     g.setFont(new Font("",Font.BOLD,CELL_SIZE));
                     g.drawString(Integer.toString(array[i][j].getBombsAround()), i * CELL_SIZE + 6, j * CELL_SIZE + 22);
-                } else {
+                } else if (array[i][j].isBomb())  {
                     g.setColor(Color.BLACK);
                     g.fillRoundRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 }

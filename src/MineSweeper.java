@@ -7,14 +7,14 @@ import java.awt.*;
 public class MineSweeper extends JFrame {
 
     final String TITLE_OF_PROGRAM = "MineSweeper";
-    final int FIELD_DX = 16;
-    final int FIELD_DY = 38;
+    final int FIELD_DX = 6;
+    final int FIELD_DY = 28;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         new MineSweeper().run();
     }
 
-    private void run() throws InterruptedException {
+    private void run() {
         Field field = new Field();
         JPanel fl = new JPanel();
         fl.setBackground(Color.black);
@@ -22,8 +22,10 @@ public class MineSweeper extends JFrame {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setBounds(500, 200, field.getFieldWidth() * field.getCellSize()+FIELD_DX, field.getFieldHeight() * field.getCellSize()+FIELD_DY);
         field.setBackground(Color.white);
+        frame.setResizable(false);
         field.showFieldInConsole();
         frame.add(field);
+        field.addMouseListener(new CustomListener(field));
         frame.setVisible(true);
     }
 }
