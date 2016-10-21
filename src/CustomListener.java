@@ -1,4 +1,3 @@
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -20,7 +19,10 @@ public class CustomListener implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            field.getCell(e.getX()/field.getCellSize(),e.getY()/field.getCellSize()).setVisible(true);
+            field.open(e.getX(), e.getY());
+        }
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            field.setFlag(e.getX(), e.getY());
         }
         field.repaint();
     }

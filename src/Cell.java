@@ -13,8 +13,9 @@ public class Cell {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void setVisible() {
+        if (!flag)
+        visible = true;
     }
 
     public boolean isBomb() {
@@ -37,8 +38,8 @@ public class Cell {
         return flag;
     }
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
+    public void invertFlag() {
+        flag = !flag;
     }
 
 }

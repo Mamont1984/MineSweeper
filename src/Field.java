@@ -12,6 +12,7 @@ public class Field extends JPanel {
     final int BOMB_COUNT = 10;
     Cell[][] array;
     Random rnd = new Random();
+    private boolean gameOver = false;
 
     Field() {
         array = new Cell[FIELD_WIDTH][FIELD_HEIGHT];
@@ -87,21 +88,78 @@ public class Field extends JPanel {
         return array[x][y];
     }
 
+    public void setFlag(int x, int y) {
+        if (!gameOver) {
+            array[x / CELL_SIZE][y / CELL_SIZE].invertFlag();
+        }
+    }
+
+    public void open(int x, int y) {
+        if (!gameOver) {
+            if (this.isBomb(x / CELL_SIZE, y / CELL_SIZE)) {
+                gameOver = true;
+                this.setVisible(x / CELL_SIZE, y / CELL_SIZE);
+            } else {
+                if (this.getBombsAround(x / CELL_SIZE, y / CELL_SIZE) == 0) {
+
+                } else {
+                    this.setVisible(x / CELL_SIZE, y / CELL_SIZE);
+                }
+            }
+        }
+    }
+
+    public boolean isBomb(int x, int y) {
+        return array[x][y].isBomb();
+    }
+
+    public void setVisible(int x, int y) {
+        /*if (!array[x][y].isVisible()) {  // XXX
+            array[x][y].setVisible();
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (x + dx >= 0 && x + dx < array.length && y + dy >= 0 && y + dy < array[x].length) {
+                        if ((array[x + dx][y + dy].getBombsAround() == 0) && !(array[x + dx][y + dy].isVisible())) {
+                            setVisible(x + dx, y + dy);
+                        }
+                    }
+                }
+            }
+        }*/
+    }
+
+    public int getBombsAround(int x, int y) {
+        return array[x][y].getBombsAround();
+    }
+
+    public void setGameOver() {
+        gameOver = true;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
        super.paintComponent(g);
         for (int i = 0; i < FIELD_WIDTH; i++) {
             for (int j = 0; j < FIELD_WIDTH; j++) {
                 if (!array[i][j].isVisible()) {
-                    g.setColor(Color.GRAY);
-                    g.fill3DRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, true);
-                } else if (!array[i][j].isBomb() && array[i][j].getBombsAround() != 0) {
-                    g.setColor(Color.BLUE);
-                    g.setFont(new Font("",Font.BOLD,CELL_SIZE));
-                    g.drawString(Integer.toString(array[i][j].getBombsAround()), i * CELL_SIZE + 6, j * CELL_SIZE + 22);
-                } else if (array[i][j].isBomb())  {
-                    g.setColor(Color.BLACK);
-                    g.fillRoundRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    if (array[i][j].isFlag()) {
+                        g.setColor(Color.GREEN);
+                        g.fill3DRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, true);
+                    } else {
+                        g.setColor(Color.GRAY);
+                        g.fill3DRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, true);
+                    }
+                } else {
+                    if (array[i][j].isBomb()) {
+                        g.setColor(Color.BLACK);
+                        g.fillRoundRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    } else {
+                        if (array[i][j].getBombsAround() != 0) {
+                        g.setColor(Color.BLUE);
+                        g.setFont(new Font("",Font.BOLD,CELL_SIZE));
+                        g.drawString(Integer.toString(array[i][j].getBombsAround()), i * CELL_SIZE + 6, j * CELL_SIZE + 22);
+                    }
+                    }
                 }
             }
         }
