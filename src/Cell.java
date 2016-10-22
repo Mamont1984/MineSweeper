@@ -14,7 +14,6 @@ public class Cell {
     }
 
     public void setVisible() {
-        if (!flag)
         visible = true;
     }
 

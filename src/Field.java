@@ -6,12 +6,13 @@ import java.util.Random;
  * Created by evgeny on 14.10.2016.
  */
 public class Field extends JPanel {
-    final int CELL_SIZE = 25;
-    final int FIELD_WIDTH = 8;
-    final int FIELD_HEIGHT = 8;
-    final int BOMB_COUNT = 10;
-    Cell[][] array;
-    Random rnd = new Random();
+    private final int CELL_SIZE = 25;
+    private final int FIELD_WIDTH = 8;
+    private final int FIELD_HEIGHT = 8;
+    private final int BOMB_COUNT = 10;
+    private int cellsWithoutMines = FIELD_WIDTH * FIELD_HEIGHT - BOMB_COUNT;
+    private Cell[][] array;
+    private Random rnd = new Random();
     private boolean gameOver = false;
 
     Field() {
@@ -59,18 +60,18 @@ public class Field extends JPanel {
         }
     }
 
-    public void showFieldInConsole() {
+/*    public void showFieldInConsole() {
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < array[i].length; j++) {
-                if (array[i][j].isBomb()) {
+                if (array[j][i].isBomb()) {
                     System.out.print("* ");
                 } else {
-                    System.out.print(array[i][j].getBombsAround() + " ");
+                    System.out.print(array[j][i].getBombsAround() + " ");
                 }
             }
             System.out.println();
         }
-    }
+    }*/
 
     public int getFieldWidth() {
         return FIELD_WIDTH;
@@ -84,10 +85,6 @@ public class Field extends JPanel {
         return CELL_SIZE;
     }
 
-    public Cell getCell(int x, int y) {
-        return array[x][y];
-    }
-
     public void setFlag(int x, int y) {
         if (!gameOver) {
             array[x / CELL_SIZE][y / CELL_SIZE].invertFlag();
@@ -96,16 +93,14 @@ public class Field extends JPanel {
 
     public void open(int x, int y) {
         if (!gameOver) {
-            if (this.isBomb(x / CELL_SIZE, y / CELL_SIZE)) {
+            if (this.isBomb(x / CELL_SIZE, y / CELL_SIZE))
                 gameOver = true;
-                this.setVisible(x / CELL_SIZE, y / CELL_SIZE);
-            } else {
-                if (this.getBombsAround(x / CELL_SIZE, y / CELL_SIZE) == 0) {
-
-                } else {
-                    this.setVisible(x / CELL_SIZE, y / CELL_SIZE);
-                }
-            }
+            this.setVisible(x / CELL_SIZE, y / CELL_SIZE);
+        }
+        if (cellsWithoutMines == 0) {
+            //winTheGame();
+            showAll();
+            gameOver = true;
         }
     }
 
@@ -114,26 +109,18 @@ public class Field extends JPanel {
     }
 
     public void setVisible(int x, int y) {
-        /*if (!array[x][y].isVisible()) {  // XXX
-            array[x][y].setVisible();
-            for (int dx = -1; dx <= 1; dx++) {
-                for (int dy = -1; dy <= 1; dy++) {
-                    if (x + dx >= 0 && x + dx < array.length && y + dy >= 0 && y + dy < array[x].length) {
-                        if ((array[x + dx][y + dy].getBombsAround() == 0) && !(array[x + dx][y + dy].isVisible())) {
-                            setVisible(x + dx, y + dy);
-                        }
-                    }
+        if (x >= 0 && x < array.length && y >= 0 && y < array[x].length) {
+            if (!array[x][y].isVisible() && !array[x][y].isFlag()) {
+                array[x][y].setVisible();
+                cellsWithoutMines--;
+                if (array[x][y].getBombsAround() == 0) {
+                    setVisible(x - 1, y);
+                    setVisible(x + 1, y);
+                    setVisible(x, y - 1);
+                    setVisible(x, y + 1);
                 }
             }
-        }*/
-    }
-
-    public int getBombsAround(int x, int y) {
-        return array[x][y].getBombsAround();
-    }
-
-    public void setGameOver() {
-        gameOver = true;
+        }
     }
 
     @Override
@@ -152,7 +139,7 @@ public class Field extends JPanel {
                 } else {
                     if (array[i][j].isBomb()) {
                         g.setColor(Color.BLACK);
-                        g.fillRoundRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        g.fillOval(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     } else {
                         if (array[i][j].getBombsAround() != 0) {
                         g.setColor(Color.BLUE);
@@ -161,6 +148,18 @@ public class Field extends JPanel {
                     }
                     }
                 }
+            }
+        }
+    }
+
+/*    private void winTheGame() {
+        System.out.println("YOU WIN!!!!!!!!!!!!!!!");
+    }*/
+
+    private void showAll() {
+        for (Cell[] c: array) {
+            for (Cell cell: c) {
+                cell.setVisible();
             }
         }
     }

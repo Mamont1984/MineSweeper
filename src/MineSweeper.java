@@ -23,7 +23,7 @@ public class MineSweeper extends JFrame {
         frame.setBounds(500, 200, field.getFieldWidth() * field.getCellSize()+FIELD_DX, field.getFieldHeight() * field.getCellSize()+FIELD_DY);
         field.setBackground(Color.white);
         frame.setResizable(false);
-        field.showFieldInConsole();
+        //field.showFieldInConsole();
         frame.add(field);
         field.addMouseListener(new CustomListener(field));
         frame.setVisible(true);
